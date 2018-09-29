@@ -8,7 +8,7 @@ import time
 @click.command()
 @click.argument("image", type=click.Path(exists=True, file_okay=True, dir_okay=False))
 @click.argument("text", type=click.STRING)
-@click.option("--show", is_flag=True)
+@click.option("--show", is_flag=True, help="open the image in a image viewer")
 def cli(image, text, show):
 	""" Generate a text + image meme """
 
@@ -20,7 +20,13 @@ def cli(image, text, show):
 	height = mainImg.height
 	
 	fontsize = int(height*0.05) # looks good enough
-	maxletters = (width//fontsize)*2 # adjustment because font size is weird
+	font = ImageFont.truetype(os.path.join("fonts","impact.ttf"), fontsize) # select font
+	fwidth, fheight = font.getsize("W") # W is the widest letter in the english alphabet
+
+	# do check https://stackoverflow.com/questions/3949422/which-letter-of-the-english-alphabet-takes-up-most-pixels#3949453
+	
+	# print(fwidth, fheight)
+	maxletters = (width//fwidth)*2 # adjustment because font size is weird
 
 	lines = []
 	i = k = 0
@@ -47,8 +53,6 @@ def cli(image, text, show):
 
 	imText = Image.new('RGB', (width, textHeight), (255,255,255)) # make image space for text
 	draw = ImageDraw.Draw(imText)
-
-	font = ImageFont.truetype(os.path.join("fonts","Verdana.ttf"), fontsize) # select font
 
 	memetext = "\n".join(lines)
 	draw.text((fontsize//2, fontsize//2), memetext, (0,0,0), font)
