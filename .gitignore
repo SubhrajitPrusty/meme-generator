@@ -3,3 +3,4 @@ __pycache__
 meme*.png
 meme*.jpg
 static/upload/*
+!static/upload/.keep
