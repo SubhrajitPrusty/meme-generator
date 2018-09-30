@@ -6,6 +6,7 @@ html, body
 body
 {
 	background-image: url("../images/bg.png");
+	background-repeat: no-repeat;
 }
 
 .page-id
