@@ -5,17 +5,10 @@ import os
 import click
 import time
 
-@click.command()
-@click.argument("image", type=click.Path(exists=True, file_okay=True, dir_okay=False))
-@click.argument("text", type=click.STRING)
-@click.option("--show", is_flag=True, help="open the image in a image viewer")
-def cli(image, text, show):
-	""" Generate a text + image meme """
-
+def memegen(mainImg, text):
 	words = text.split(" ") # extract words
 	wordlen = [len(x) for x in words] # extract length of each words
 
-	mainImg = Image.open(image)
 	width = mainImg.width
 	height = mainImg.height
 	
@@ -55,7 +48,7 @@ def cli(image, text, show):
 	draw = ImageDraw.Draw(imText)
 
 	memetext = "\n".join(lines)
-	draw.text((fontsize//2, fontsize//2), memetext, (0,0,0), font)
+	draw.text((fontsize//3, fontsize//3), memetext, (0,0,0), font)
 
 	total_h = height + imText.height # total height of text + image
 
@@ -64,8 +57,23 @@ def cli(image, text, show):
 	new_im.paste(imText, (0,0)) # paste text at top
 	new_im.paste(mainImg, (0,textHeight)) # paste image below text
 
+	return new_im
+
+@click.command()
+@click.argument("image", type=click.Path(exists=True, file_okay=True, dir_okay=False))
+@click.argument("text", type=click.STRING)
+@click.option("--show", is_flag=True, help="open the image in a image viewer")
+def cli(image, text, show):
+	""" Generate a text + image meme """
+	img = Image.open(image)
+	if img.height < 100 or img.width < 100:
+		img = img.resize((img.width*4, img.height*4))
+	elif img.height < 200 or img.width < 200:
+		img = img.resize((img.width*2, img.height*2))
+	img = memegen(img, text)
+
 	if show:
-		new_im.show()
+		img.show()
 	
-	new_im.save("meme-{}.jpg".format(int(time.time())))
+	img.save("meme-{}.jpg".format(int(time.time())))
 
