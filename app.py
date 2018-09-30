@@ -7,7 +7,7 @@ import generate
 from gevent.pywsgi import WSGIServer
 
 
-UPLOAD_FOLDER = os.path.join("static","upload")
+UPLOAD_FOLDER = os.path.join("/","static","upload")
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 app = Flask(__name__, static_url_path="/static")
