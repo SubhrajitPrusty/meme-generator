@@ -8,14 +8,18 @@
 </head>
 <body>
 	<div class="jumbotron bg-dark mx-auto mt-5 py-5 col-sm-8">
-		<div class="alert alert-warning block" role="alert">
-			<a href="{{ context }}" class="block" download>
-				Click to Download
-				<img src="{{ context }}" alt="Image" class="img-fluid block">
+		<div class="alert alert-warning block center-align" role="alert">
+			<a href="{{ context }}" class="block download-block" download>
+				<div class="download">
+                    DOWNLOAD
+                </div>
+                <div>
+                    <img src="{{ context }}" alt="Image" class="img-fluid block">
+                </div>
 			</a>
 		</div>
 		<form action="/">
-			<button type="submit" class="btn btn-primary">Go BACK</button>
+			<button type="submit" class="btn btn-primary">BACK</button>
 		</form>
 	</div>
 </body>
