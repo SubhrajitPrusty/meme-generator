@@ -19,3 +19,16 @@ body
 {
 	color: #555555;
 }
+
+.center-align
+{
+    text-align: center;
+    margin: auto;
+}
+
+.download
+{
+    font-size: 150%;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
