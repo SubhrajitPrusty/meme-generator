@@ -4,8 +4,13 @@ import time
 
 from PIL import Image, ImageFont, ImageDraw
 
+COLORS = {
+    'BLACK': (0, 0, 0),
+    'WHITE': (255, 255, 255),
+}
 
-def memegen(mainImg, text):
+
+def memegen(mainImg, text, dark):
     words = text.split(" ")  # extract words
 
     width = mainImg.width
@@ -41,21 +46,29 @@ def memegen(mainImg, text):
 
     lineheight = 1.5
 
+    # set colors
+    if dark:
+        image_space_color = COLORS['BLACK']
+        text_color = COLORS['WHITE']
+    else:
+        image_space_color = COLORS['WHITE']
+        text_color = COLORS['BLACK']
+
     # get total height of text
     textHeight = int((fontsize * lineheight) * len(lines))
 
     # make image space for text
-    imText = Image.new('RGB', (width, textHeight), (255, 255, 255))
+    imText = Image.new('RGB', (width, textHeight), image_space_color)
 
     draw = ImageDraw.Draw(imText)
 
     memetext = "\n".join(lines)
-    draw.text((fontsize // 3, fontsize // 3), memetext, (0, 0, 0), font)
+    draw.text((fontsize // 3, fontsize // 3), memetext, text_color, font)
 
     total_h = height + imText.height  # total height of text + image
 
     # make new image with size of text space + old image
-    new_im = Image.new('RGB', (width, total_h), (255, 255, 255))
+    new_im = Image.new('RGB', (width, total_h), image_space_color)
 
     new_im.paste(imText, (0, 0))  # paste text at top
     new_im.paste(mainImg, (0, textHeight))  # paste image below text
@@ -68,15 +81,18 @@ def memegen(mainImg, text):
     exists=True, file_okay=True, dir_okay=False)
 )
 @click.argument("text", type=click.STRING)
-@click.option("--show", is_flag=True, help="open the image in a image viewer")
-def cli(image, text, show):
+@click.option("--show", is_flag=True, help="open the image in a image viewer.")
+@click.option(
+    "--dark", is_flag=True, help="Show white text on black background."
+)
+def cli(image, text, show, dark):
     """ Generate a text + image meme """
     img = Image.open(image)
     if img.height < 100 or img.width < 100:
         img = img.resize((img.width * 4, img.height * 4))
     elif img.height < 200 or img.width < 200:
         img = img.resize((img.width * 2, img.height * 2))
-    img = memegen(img, text)
+    img = memegen(img, text, dark)
 
     if show:
         img.show()
